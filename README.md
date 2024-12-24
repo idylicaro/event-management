@@ -66,7 +66,7 @@ An API designed to manage events, supporting features like event creation, user 
    - [x] Set up basic project structure.
    - [x] Connect to PostgreSQL and configure migrations using `golang-migrate`.
 2. **Documentation**
-   - [ ] Set up Swagger for API documentation.
+   - [x] Set up Swagger for API documentation.
    - [ ] Draw the architecture with tools like Excalidraw.
    - [ ] Draw or write the Use Cases .
 3. **Basic Endpoints**
