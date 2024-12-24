@@ -1,28 +1,38 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"github.com/idylicaro/event-management/config"
-
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/idylicaro/event-management/internal/events"
 )
 
 func main() {
 	cfg := config.LoadConfig()
 
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
-		cfg.PostgresUser, cfg.PostgresPassword,
-		cfg.PostgresHost, cfg.PostgresPort, cfg.PostgresDB,
-	)
+	r := gin.Default()
 
-	dbpool, err := pgxpool.New(context.Background(), dsn)
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     cfg.CorsAllowedOrigins,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
+
+	connPool, err := config.ConnectDB()
 	if err != nil {
-		log.Fatalf("Unable to connect to database: %v", err)
+		log.Fatal("Failed to connect to database: ", err)
 	}
-	defer dbpool.Close()
+	defer connPool.Close()
 
-	log.Println("Connected to PostgreSQL!")
+	api := r.Group("/api/v1")
+
+	eventsGroup := api.Group("/events")
+	events.RegisterEventsRoutes(eventsGroup, connPool)
+
+	r.Run(fmt.Sprintf(":%s", cfg.ServerPort))
 }

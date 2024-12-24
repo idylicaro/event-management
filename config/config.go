@@ -1,18 +1,23 @@
 package config
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"os"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	PostgresHost     string
-	PostgresPort     string
-	PostgresUser     string
-	PostgresPassword string
-	PostgresDB       string
+	ServerPort         string
+	CorsAllowedOrigins []string
+	PostgresHost       string
+	PostgresPort       string
+	PostgresUser       string
+	PostgresPassword   string
+	PostgresDB         string
 }
 
 func LoadConfig() *Config {
@@ -27,10 +32,28 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		PostgresHost:     os.Getenv("POSTGRES_HOST"),
-		PostgresPort:     os.Getenv("POSTGRES_PORT"),
-		PostgresUser:     os.Getenv("POSTGRES_USER"),
-		PostgresPassword: os.Getenv("POSTGRES_PASSWORD"),
-		PostgresDB:       os.Getenv("POSTGRES_DB"),
+		ServerPort:         getEnv("SERVER_PORT", "8080"),
+		CorsAllowedOrigins: getEnvAsSlice("CORS_ALLOWED_ORIGINS", []string{"*"}),
+
+		PostgresHost:     getEnv("POSTGRES_HOST", "localhost"),
+		PostgresPort:     getEnv("POSTGRES_PORT", "5432"),
+		PostgresUser:     getEnv("POSTGRES_USER", "postgres"),
+		PostgresPassword: getEnv("POSTGRES_PASSWORD", "postgres"),
+		PostgresDB:       getEnv("POSTGRES_DB", "eventdb"),
 	}
+}
+
+func ConnectDB() (*pgxpool.Pool, error) {
+	cfg := LoadConfig()
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
+		cfg.PostgresUser, cfg.PostgresPassword,
+		cfg.PostgresHost, cfg.PostgresPort, cfg.PostgresDB,
+	)
+
+	dbpool, err := pgxpool.New(context.Background(), dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	return dbpool, nil
 }
