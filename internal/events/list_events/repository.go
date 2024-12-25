@@ -20,8 +20,6 @@ func NewGetEventsRepository(db *pgxpool.Pool) GetEventsRepository {
 	return &getEventsRepository{db}
 }
 
-// TODO: CREATE index to improve performance in tiltle and start_time columns into filters and sort operations.
-
 func (r *getEventsRepository) Execute(filters models.EventFilters) ([]models.Event, error) {
 	baseQuery := `
 		SELECT id, title, description, location, start_time, end_time, price, created_at, updated_at

@@ -13,3 +13,6 @@ CREATE TABLE events (
 
 -- Constraints
 
+-- Indexes
+CREATE INDEX events_title_index ON events (title);
+CREATE INDEX events_start_time_index ON events (start_time);
