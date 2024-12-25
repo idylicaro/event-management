@@ -1,6 +1,7 @@
 CREATE TABLE events (
     ID SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
+    description TEXT NULL,
     location TEXT NOT NULL,
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP NOT NULL,
