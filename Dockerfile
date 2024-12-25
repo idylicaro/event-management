@@ -8,11 +8,17 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
+# Install Swag CLI
+RUN go install github.com/swaggo/swag/cmd/swag@latest
+
 # Copy the rest of the application code into the container
 COPY . ./
 
+RUN swag init
+
 # Build the Go binary
 RUN go build -o main .
+
 
 # Production stage: Create a lightweight runtime image for production
 FROM debian:bullseye-slim AS production
@@ -26,6 +32,8 @@ WORKDIR /app
 
 # Copy the compiled Go binary from the builder stage
 COPY --from=builder /app/main .
+# Copy the Swagger documentation from the builder stage
+COPY --from=builder /app/docs /app/docs
 
 # Set the environment variable for production
 ENV ENVIRONMENT=production
@@ -54,6 +62,8 @@ COPY .env .env
 
 # Copy the compiled Go binary from the builder stage
 COPY --from=builder /app/main .
+# Copy the Swagger documentation from the builder stage
+COPY --from=builder /app/docs /app/docs
 
 # Set the environment variable for development
 ENV ENVIRONMENT=development
