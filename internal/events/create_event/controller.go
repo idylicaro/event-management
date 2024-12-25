@@ -9,7 +9,7 @@ import (
 
 // @Summary Create a new event
 // @Description Create a new event
-// @Tags events
+// @Tags Events
 // @Accept json
 // @Produce json
 // @Success 201 {object} models.Event
@@ -25,7 +25,7 @@ func CreateEventController(svc CreateEventService) gin.HandlerFunc {
 			return
 		}
 
-		if err := svc.CreateEvent(&event); err != nil {
+		if err := svc.Execute(&event); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}

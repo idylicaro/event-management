@@ -6,7 +6,7 @@ import (
 
 // Interface do serviço de eventos
 type CreateEventService interface {
-	CreateEvent(event *models.Event) error
+	Execute(event *models.Event) error
 }
 
 // Estrutura do serviço de eventos
@@ -20,6 +20,6 @@ func NewCreateEventService(repo CreateEventRepository) CreateEventService {
 }
 
 // Implementação do método CreateEvent
-func (s *createEventService) CreateEvent(event *models.Event) error {
-	return s.repo.CreateEvent(event)
+func (s *createEventService) Execute(event *models.Event) error {
+	return s.repo.Execute(event)
 }
