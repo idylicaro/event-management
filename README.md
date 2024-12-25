@@ -103,6 +103,9 @@ An API designed to manage events, supporting features like event creation, user 
 
 ## Architecture Overview
 
+![image](https://github.com/user-attachments/assets/0d139d49-88d8-4d7d-bff6-6ffb6dac0aa7)
+
+
 ### Components
 - **Controllers**: Handle HTTP requests and responses.
 - **Services**: Contain business logic.
