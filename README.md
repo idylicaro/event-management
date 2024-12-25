@@ -112,15 +112,6 @@ An API designed to manage events, supporting features like event creation, user 
 - **Repositories**: Handle database interactions.
 - **Models**: Define data structures.
 
-### Diagram
-Visualize the architecture with tools like Excalidraw:
-1. **Backend Flow**: API <--> Database <--> Stripe/OAuth2
-2. **Use Cases**:
-   - Create Event: User submits data → API saves event to database.
-   - Generate Ticket: Payment processed → API generates ticket → Ticket stored.
-
----
-
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any suggestions or improvements.
