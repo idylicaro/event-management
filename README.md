@@ -72,7 +72,8 @@ An API designed to manage events, supporting features like event creation, user 
 3. **Basic Endpoints**
    - [x] Create Event.
    - [x] List Events.
-   - - [ ] ? Create a helper for pagination, and use default values for page and limit? 
+   - - [x] Create a helper for pagination
+   - [x] Create a BaseResponse and Metadata about pagination.
 4. **Authentication**
    - [ ] Implement OAuth2 login with Google.
 
