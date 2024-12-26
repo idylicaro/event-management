@@ -1,10 +1,13 @@
 package list_events
 
-import "github.com/idylicaro/event-management/internal/models"
+import (
+	"github.com/idylicaro/event-management/internal/helpers"
+	"github.com/idylicaro/event-management/internal/models"
+)
 
 // GetEventsService defines the service for getting events
 type GetEventsService interface {
-	Execute(filters models.EventFilters) ([]models.Event, error)
+	Execute(filters models.EventFilters) ([]models.Event, helpers.PaginationMeta, error)
 }
 
 // getEventsService is the concrete implementation of GetEventsService
@@ -18,6 +21,6 @@ func NewGetEventsService(repo GetEventsRepository) GetEventsService {
 }
 
 // Execute gets events based on filters
-func (s *getEventsService) Execute(filters models.EventFilters) ([]models.Event, error) {
+func (s *getEventsService) Execute(filters models.EventFilters) ([]models.Event, helpers.PaginationMeta, error) {
 	return s.repo.Execute(filters)
 }

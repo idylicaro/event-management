@@ -39,7 +39,7 @@ type EventFilters struct {
 	Title     string `form:"title"`
 	StartTime string `form:"start_time"`
 	EndTime   string `form:"end_time"`
-	Page      int    `form:"page" binding:"gte=1"`
-	Limit     int    `form:"limit" binding:"gte=1,lte=100"`
+	Page      int    `form:"page"`
+	Limit     int    `form:"limit" binding:"lte=100"`
 	Sort      string `form:"sort"`
 }
