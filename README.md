@@ -76,7 +76,7 @@ An API designed to manage events, supporting features like event creation, user 
    - [x] Create a BaseResponse and Metadata about pagination.
 4. **Containerization and Deployment**
    - [x] Configure Docker for development and production environments.
-   - [ ] Create Github action CI and CD rotines.
+   - [x] Create CD rotine to first deploy.
    - [ ] Make a deployment.
 5. **Authentication** (Needs first deploy and a domain to simplify OAuth2 google configuration to test...)
    - [ ] Implement OAuth2 login with Google.
@@ -97,6 +97,8 @@ An API designed to manage events, supporting features like event creation, user 
 2. **Testing**
    - [ ] Write unit and integration tests.
    - [ ] Perform load testing with k6 or Artillery.
+3. **CI/CD**
+   - [ ] Create Github action CI.
 4. **Optional**
    - [ ] Create Kubernetes deployments and services.
    - [ ] Integrate Grafana and Prometheus for monitoring.
