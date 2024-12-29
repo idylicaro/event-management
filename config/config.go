@@ -18,6 +18,11 @@ type Config struct {
 	PostgresUser       string
 	PostgresPassword   string
 	PostgresDB         string
+
+	// Google Oauth provider
+	GoogleClientID     string
+	GoogleClientSecret string
+	GoogleRedirectURL  string
 }
 
 func LoadConfig() *Config {
@@ -40,6 +45,10 @@ func LoadConfig() *Config {
 		PostgresUser:     getEnv("POSTGRES_USER", "postgres"),
 		PostgresPassword: getEnv("POSTGRES_PASSWORD", "postgres"),
 		PostgresDB:       getEnv("POSTGRES_DB", "eventdb"),
+
+		GoogleClientID:     getEnv("GOOGLE_CLIENT_ID", ""),
+		GoogleClientSecret: getEnv("GOOGLE_CLIENT_SECRET", ""),
+		GoogleRedirectURL:  getEnv("GOOGLE_REDIRECT_URL", ""),
 	}
 }
 

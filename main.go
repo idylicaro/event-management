@@ -7,6 +7,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/idylicaro/event-management/config"
+	"github.com/idylicaro/event-management/internal/auth"
 	"github.com/idylicaro/event-management/internal/events"
 	"github.com/idylicaro/event-management/internal/helpers/response"
 	swaggerFiles "github.com/swaggo/files"
@@ -50,6 +51,11 @@ func main() {
 
 	eventsGroup := api.Group("/events")
 	events.RegisterEventsRoutes(eventsGroup, connPool)
+
+	authGroup := api.Group("/auth")
+	auth.RegisterAuthRoutes(authGroup, connPool, *cfg)
+
+	// Swagger
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	r.Run(fmt.Sprintf(":%s", cfg.ServerPort))
