@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	dto "github.com/idylicaro/event-management/internal/dto/events"
 	"github.com/idylicaro/event-management/internal/helpers/response"
-	models "github.com/idylicaro/event-management/internal/models"
 )
 
 // @Summary Create a new event
@@ -19,7 +19,7 @@ import (
 // @Router /events [post]
 func CreateEventController(svc CreateEventService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var event models.Event
+		var event dto.CreateEventRequest
 
 		if err := c.ShouldBindJSON(&event); err != nil {
 			response.Error(c, http.StatusBadRequest, "validation.body.failed", err.Error())

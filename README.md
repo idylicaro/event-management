@@ -83,6 +83,7 @@ An API designed to manage events, supporting features like event creation, user 
 
 ### **Phase 2: Intermediate Features**
 1. **Event Management**
+   - [ ] Refactor: Change to Struct-Based Controller,Service and Repository
    - [ ] Update and delete events.
    - [ ] Add pagination for event listings.
 2. **Payments**

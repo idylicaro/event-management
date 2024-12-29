@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"log"
 
+	dto "github.com/idylicaro/event-management/internal/dto/events"
 	"github.com/idylicaro/event-management/internal/helpers"
 	"github.com/idylicaro/event-management/internal/models"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type GetEventsRepository interface {
-	Execute(filters models.EventFilters) ([]models.Event, helpers.PaginationMeta, error)
+	Execute(filters dto.EventFilters) ([]models.Event, helpers.PaginationMeta, error)
 }
 
 type getEventsRepository struct {
@@ -22,7 +23,7 @@ func NewGetEventsRepository(db *pgxpool.Pool) GetEventsRepository {
 	return &getEventsRepository{db}
 }
 
-func (r *getEventsRepository) Execute(filters models.EventFilters) ([]models.Event, helpers.PaginationMeta, error) {
+func (r *getEventsRepository) Execute(filters dto.EventFilters) ([]models.Event, helpers.PaginationMeta, error) {
 	baseQuery := `
 		SELECT id, title, description, location, start_time, end_time, price, created_at, updated_at
 		FROM events

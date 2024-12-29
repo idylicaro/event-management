@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	dto "github.com/idylicaro/event-management/internal/dto/events"
 	"github.com/idylicaro/event-management/internal/helpers/response"
-	"github.com/idylicaro/event-management/internal/models"
 )
 
 // @Summary      List Events
@@ -25,7 +25,7 @@ import (
 // @Router       /events [get]
 func GetEventsController(svc GetEventsService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var filters models.EventFilters
+		var filters dto.EventFilters
 		if err := c.ShouldBindQuery(&filters); err != nil {
 			response.Error(c, http.StatusBadRequest, "validation.query.failed", err.Error())
 			return
@@ -37,6 +37,6 @@ func GetEventsController(svc GetEventsService) gin.HandlerFunc {
 			return
 		}
 
-		response.Success(c, http.StatusOK,"get.events.success", events, meta)
+		response.Success(c, http.StatusOK, "get.events.success", events, meta)
 	}
 }
