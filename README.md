@@ -117,6 +117,13 @@ An API designed to manage events, supporting features like event creation, user 
 - **Repositories**: Handle database interactions.
 - **Models**: Define data structures.
 
+
+### Development Commands
+
+- `./scripts/migrate.sh up`
+- `./scripts/migrate.sh down`
+- `./scripts/migrate.sh version`
+
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any suggestions or improvements.

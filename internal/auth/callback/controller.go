@@ -11,6 +11,16 @@ type Controller struct {
 	Service Service
 }
 
+// @Summary Handle the callback from the authentication provider
+// @Description Handle the callback from the authentication provider
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param provider path string true "Provider name"
+// @Param code query string true "Code from the provider"
+// @Success 200 {object} string
+// @Failure 400 {object} string
+// @Router /auth/{provider}/callback [get]
 func (c *Controller) HandleCallback(ctx *gin.Context) {
 	provider := ctx.Param("provider")
 	code := ctx.Query("code")
