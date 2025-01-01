@@ -14,6 +14,7 @@ type Event struct {
 	StartTime   time.Time `json:"start_time" db:"start_time"`
 	EndTime     time.Time `json:"end_time" db:"end_time"`
 	Price       float64   `json:"price" db:"price"`
+	UserID      int64     `json:"user_id"` // Relation to the user that owns the event
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`
 }
