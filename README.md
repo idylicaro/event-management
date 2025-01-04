@@ -77,8 +77,9 @@ An API designed to manage events, supporting features like event creation, user 
 4. **Containerization and Deployment**
    - [x] Configure Docker for development and production environments.
    - [x] Create CD rotine to first deploy.
-   - [ ] Make a deployment.
+   - [x] Make a deployment.
 5. **Authentication** (Needs first deploy and a domain to simplify OAuth2 google configuration to test...)
+   - [x] Configure in GCP.
    - [ ] Implement OAuth2 login with Google.
 
 ### **Phase 2: Intermediate Features**
@@ -100,6 +101,7 @@ An API designed to manage events, supporting features like event creation, user 
    - [ ] Perform load testing with k6 or Artillery.
 3. **CI/CD**
    - [ ] Create Github action CI.
+   - [ ] Create a workflow to automate releases (using semantic commit).
 4. **Optional**
    - [ ] Create Kubernetes deployments and services.
    - [ ] Integrate Grafana and Prometheus for monitoring.
