@@ -80,7 +80,7 @@ An API designed to manage events, supporting features like event creation, user 
    - [x] Make a deployment.
 5. **Authentication** (Needs first deploy and a domain to simplify OAuth2 google configuration to test...)
    - [x] Configure in GCP.
-   - [ ] Implement OAuth2 login with Google.
+   - [x] Implement OAuth2 login with Google using OpenID for authentication.
 
 ### **Phase 2: Intermediate Features**
 1. **Event Management**
