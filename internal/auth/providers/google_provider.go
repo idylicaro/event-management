@@ -27,8 +27,9 @@ func NewGoogleProvider(clientID, clientSecret, redirectURL string) *GoogleProvid
 }
 
 func (g *GoogleProvider) GetAuthURL() string {
-	verifier := oauth2.GenerateVerifier()
-	return g.config.AuthCodeURL("state", oauth2.AccessTypeOffline, oauth2.S256ChallengeOption(verifier))
+	// TODO: Optionally, the front-end can handle generating the code_verifier and code_challenge for PKCE security.
+	// The front-end should generate a secure random code_verifier and calculate the code_challenge with SHA256.
+	return g.config.AuthCodeURL("state", oauth2.AccessTypeOffline)
 }
 
 func (g *GoogleProvider) ExchangeCode(ctx context.Context, code string) (TokenResponse, error) {
