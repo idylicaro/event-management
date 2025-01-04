@@ -1,6 +1,7 @@
 package callback
 
 import (
+	"context"
 	"errors"
 
 	"github.com/idylicaro/event-management/internal/auth/providers"
@@ -12,14 +13,19 @@ type Service struct {
 	Repository Repository
 }
 
-func (s *Service) ProcessCallback(providerName, code string) (models.User, error) {
+func (s *Service) ProcessCallback(ctx context.Context, providerName, code string) (models.User, error) {
 	provider, exists := s.Providers[providerName]
 	if !exists {
 		return models.User{}, errors.New("provider not supported")
 	}
 
+	tokens, err := provider.ExchangeCode(ctx, code)
+	if err != nil {
+		return models.User{}, err
+	}
+
 	// Exchange the code for a token and fetch user data
-	userData, err := provider.GetUserInfo(code)
+	userData, err := provider.GetUserInfo(tokens.AccessToken)
 	if err != nil {
 		return models.User{}, err
 	}
