@@ -27,7 +27,8 @@ func NewGoogleProvider(clientID, clientSecret, redirectURL string) *GoogleProvid
 }
 
 func (g *GoogleProvider) GetAuthURL() string {
-	return g.config.AuthCodeURL("state", oauth2.AccessTypeOffline)
+	verifier := oauth2.GenerateVerifier()
+	return g.config.AuthCodeURL("state", oauth2.AccessTypeOffline, oauth2.S256ChallengeOption(verifier))
 }
 
 func (g *GoogleProvider) ExchangeCode(ctx context.Context, code string) (TokenResponse, error) {

@@ -23,6 +23,12 @@ RUN go build -o main .
 # Production stage: Create a lightweight runtime image for production
 FROM debian:bullseye-slim AS production
 
+# Install and update CA certificates
+RUN apt-get update && \
+    apt-get install -y ca-certificates && \
+    update-ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install necessary libraries (e.g., libc6) to run the Go binary
 RUN apt-get update && \
     apt-get install -y libc6
@@ -50,6 +56,11 @@ ENTRYPOINT ["/app/main"]
 # Development stage: Create a lightweight runtime image for development
 FROM debian:bullseye-slim AS development
 
+# Install and update CA certificates
+RUN apt-get update && \
+    apt-get install -y ca-certificates && \
+    update-ca-certificates
+    
 # Install necessary libraries (e.g., libc6) to run the Go binary
 RUN apt-get update && \
     apt-get install -y libc6

@@ -26,3 +26,4 @@ swagger.json
 docs
 docs.go
 swagger.yaml
+.env.production
