@@ -81,12 +81,14 @@ An API designed to manage events, supporting features like event creation, user 
 5. **Authentication** (Needs first deploy and a domain to simplify OAuth2 google configuration to test...)
    - [x] Configure in GCP.
    - [x] Implement OAuth2 login with Google using OpenID for authentication.
+   - [ ] Return the JWT token if the authentication is successful.
 
 ### **Phase 2: Intermediate Features**
 1. **Event Management**
    - [ ] Refactor: Change to Struct-Based Controller,Service and Repository
    - [ ] Update and delete events.
    - [ ] Add pagination for event listings.
+   - [ ] Protect endpoints with Private endpoints.
 2. **Payments**
    - [ ] Integrate Stripe for processing payments (Checkout Sessions).
 3. **Ticket Handling**

@@ -6,17 +6,18 @@ Handles the OAuth2 login flow for authenticating users via Google, including cre
 ### Primary Actor: Client Application (Frontend)
 
 ### Main Flow:
-1. The client sends a `GET /auth/google` request to initiate the OAuth2 flow.
-2. The API redirects the user to Google's OAuth2 server with the appropriate parameters.
-3. The user logs in and consents on Google's page.
-4. Google redirects the user back to the API's callback endpoint with an authorization code.
-5. The client sends a `POST /auth/google/callback` request with the authorization code in the body.
-6. The API exchanges the code for an access token with Google.
-7. The API validates the token and retrieves the user's profile (e.g., email, name, profile picture).
-8. **First-Time Login Check:**
+1. The client sends a `GET /auth/google/url` request to initiate the OAuth2 flow.
+2. The API returns the URL to Google's OAuth2 server with the appropriate parameters.
+3. The client redirects the user to the obtained url.
+4. The user logs in and consents on Google's page.
+5. Google redirects the user back to the API's callback endpoint with an authorization code.
+6. The client sends a `POST /auth/google/callback` request with the authorization code in the body.
+7. The API exchanges the code for an access token with Google.
+8. The API validates the token and retrieves the user's profile (e.g., email, name, profile picture).
+9. **First-Time Login Check:**
    - If the user does not exist in the database, the API creates a new user record.
    - Assigns default roles or settings as needed.
-9. The API responds with `200 OK`, including a JWT token and user details.
+10. The API responds with `200 OK`, including a JWT token and user details.
 
 ### Alternate Flows:
 1. **Invalid Authorization Code:**
