@@ -8,7 +8,7 @@ import (
 )
 
 type Controller struct {
-	Service Service
+	Service *Service
 }
 
 // @Summary Handle the callback from the authentication provider
@@ -24,10 +24,10 @@ type Controller struct {
 func (c *Controller) HandleCallback(ctx *gin.Context) {
 	provider := ctx.Param("provider")
 	code := ctx.Query("code")
-	user, err := c.Service.ProcessCallback(ctx, provider, code)
+	tokenResponse, err := c.Service.ProcessCallback(ctx, provider, code)
 	if err != nil {
 		response.Error(ctx, http.StatusBadRequest, "auth.callback.failed", err.Error())
 		return
 	}
-	response.Success(ctx, http.StatusOK, "auth.callback.success", user, nil)
+	response.Success(ctx, http.StatusOK, "auth.callback.success", tokenResponse, nil)
 }

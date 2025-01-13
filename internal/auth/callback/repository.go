@@ -10,19 +10,15 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type Repository interface {
-	FindOrCreateUser(data providers.UserInfo) (models.User, error)
-}
-
-type repository struct {
+type Repository struct {
 	db *pgxpool.Pool
 }
 
-func NewRepository(db *pgxpool.Pool) Repository {
-	return &repository{db}
+func NewRepository(db *pgxpool.Pool) *Repository {
+	return &Repository{db}
 }
 
-func (r *repository) FindOrCreateUser(data providers.UserInfo) (models.User, error) {
+func (r *Repository) FindOrCreateUser(data providers.UserInfo) (models.User, error) {
 	var user models.User
 	query := `SELECT id, email, name, profile_picture_url, role, created_at, updated_at FROM users WHERE email = $1`
 	err := r.db.QueryRow(context.Background(), query, data.Email).Scan(&user.ID, &user.Email, &user.Name, &user.ProfilePictureURL, &user.Role, &user.CreatedAt, &user.UpdatedAt)

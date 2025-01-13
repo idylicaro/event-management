@@ -8,7 +8,7 @@ import (
 )
 
 type Controller struct {
-	Service Service
+	Service *Service
 }
 
 // @Summary Get the authentication URL for a provider

@@ -23,6 +23,9 @@ type Config struct {
 	GoogleClientID     string
 	GoogleClientSecret string
 	GoogleRedirectURL  string
+
+	// JWT
+	JWTSecret string
 }
 
 func LoadConfig() *Config {
@@ -49,6 +52,8 @@ func LoadConfig() *Config {
 		GoogleClientID:     getEnv("GOOGLE_CLIENT_ID", ""),
 		GoogleClientSecret: getEnv("GOOGLE_CLIENT_SECRET", ""),
 		GoogleRedirectURL:  getEnv("GOOGLE_REDIRECT_URL", ""),
+
+		JWTSecret: getEnv("JWT_SECRET", ""),
 	}
 }
 
