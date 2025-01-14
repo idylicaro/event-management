@@ -7,8 +7,12 @@ import (
 	"github.com/idylicaro/event-management/internal/helpers/response"
 )
 
-type Controller struct {
-	Service *Service
+type callbackController struct {
+	Service CallbackService
+}
+
+func NewCallbackController(service CallbackService) CallbackController {
+	return &callbackController{Service: service}
 }
 
 // @Summary Handle the callback from the authentication provider
@@ -21,10 +25,10 @@ type Controller struct {
 // @Success 200 {object} string
 // @Failure 400 {object} string
 // @Router /auth/{provider}/callback [get]
-func (c *Controller) HandleCallback(ctx *gin.Context) {
+func (c *callbackController) Handle(ctx *gin.Context) {
 	provider := ctx.Param("provider")
 	code := ctx.Query("code")
-	tokenResponse, err := c.Service.ProcessCallback(ctx, provider, code)
+	tokenResponse, err := c.Service.Execute(ctx, provider, code)
 	if err != nil {
 		response.Error(ctx, http.StatusBadRequest, "auth.callback.failed", err.Error())
 		return

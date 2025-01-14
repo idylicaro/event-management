@@ -5,11 +5,6 @@ import (
 	"github.com/idylicaro/event-management/internal/mappers"
 )
 
-// Interface do serviço de eventos
-type CreateEventService interface {
-	Execute(event *dto.CreateEventRequest) error
-}
-
 // Estrutura do serviço de eventos
 type createEventService struct {
 	repo CreateEventRepository

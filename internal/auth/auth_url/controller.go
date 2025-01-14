@@ -7,8 +7,12 @@ import (
 	"github.com/idylicaro/event-management/internal/helpers/response"
 )
 
-type Controller struct {
-	Service *Service
+type generateAuthURLController struct {
+	Service GenerateAuthURLService
+}
+
+func NewGenerateAuthURLController(service GenerateAuthURLService) GenerateAuthURLController {
+	return &generateAuthURLController{Service: service}
 }
 
 // @Summary Get the authentication URL for a provider
@@ -20,9 +24,9 @@ type Controller struct {
 // @Success 200 {object} string
 // @Failure 400 {object} string
 // @Router /auth/{provider} [get]
-func (c *Controller) GetAuthURL(ctx *gin.Context) {
+func (c *generateAuthURLController) Handle(ctx *gin.Context) {
 	provider := ctx.Param("provider") // Ex: "google" ou "github"
-	url, err := c.Service.GenerateAuthURL(provider)
+	url, err := c.Service.Execute(provider)
 	if err != nil {
 		response.Error(ctx, http.StatusBadRequest, "auth.get_auth_url.failed", err.Error())
 		return

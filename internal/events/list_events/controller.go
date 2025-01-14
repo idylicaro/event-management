@@ -8,6 +8,14 @@ import (
 	"github.com/idylicaro/event-management/internal/helpers/response"
 )
 
+type getEventsController struct {
+	Service GetEventsService
+}
+
+func NewGetEventsController(service GetEventsService) GetEventsController {
+	return &getEventsController{Service: service}
+}
+
 // @Summary      List Events
 // @Description  Retrieves a list of events, optionally filtered by title, date range, and paginated.
 // @Tags         Events
@@ -23,20 +31,18 @@ import (
 // @Failure      400        {object}  map[string]string   "Invalid request parameters"
 // @Failure      500        {object}  map[string]string   "Internal server error"
 // @Router       /events [get]
-func GetEventsController(svc GetEventsService) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var filters dto.EventFilters
-		if err := c.ShouldBindQuery(&filters); err != nil {
-			response.Error(c, http.StatusBadRequest, "validation.query.failed", err.Error())
-			return
-		}
-
-		events, meta, err := svc.Execute(filters)
-		if err != nil {
-			response.Error(c, http.StatusInternalServerError, "get.events.fail", err.Error())
-			return
-		}
-
-		response.Success(c, http.StatusOK, "get.events.success", events, meta)
+func (c *getEventsController) Handle(ctx *gin.Context) {
+	var filters dto.EventFilters
+	if err := ctx.ShouldBindQuery(&filters); err != nil {
+		response.Error(ctx, http.StatusBadRequest, "validation.query.failed", err.Error())
+		return
 	}
+
+	events, meta, err := c.Service.Execute(filters)
+	if err != nil {
+		response.Error(ctx, http.StatusInternalServerError, "get.events.fail", err.Error())
+		return
+	}
+
+	response.Success(ctx, http.StatusOK, "get.events.success", events, meta)
 }

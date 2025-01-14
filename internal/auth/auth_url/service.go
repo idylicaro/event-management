@@ -6,11 +6,15 @@ import (
 	"github.com/idylicaro/event-management/internal/auth/providers"
 )
 
-type Service struct {
-	Providers map[string]providers.OAuthProvider // Ex: "google": GoogleProvider
+type generateAuthURLService struct {
+	Providers map[string]providers.OAuthProvider
 }
 
-func (s *Service) GenerateAuthURL(providerName string) (string, error) {
+func NewGenerateAuthURLService(providers map[string]providers.OAuthProvider) GenerateAuthURLService {
+	return &generateAuthURLService{Providers: providers}
+}
+
+func (s *generateAuthURLService) Execute(providerName string) (string, error) {
 	provider, exists := s.Providers[providerName]
 	if !exists {
 		return "", errors.New("provider not supported")

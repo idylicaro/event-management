@@ -8,6 +8,14 @@ import (
 	"github.com/idylicaro/event-management/internal/helpers/response"
 )
 
+type createEventController struct {
+	Service CreateEventService
+}
+
+func NewCreateEventController(service CreateEventService) CreateEventController {
+	return &createEventController{Service: service}
+}
+
 // @Summary Create a new event
 // @Description Create a new event
 // @Tags Events
@@ -17,20 +25,18 @@ import (
 // @Failure 400 {object} map[string]string
 // @Failure 500 {object} map[string]string
 // @Router /events [post]
-func CreateEventController(svc CreateEventService) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var event dto.CreateEventRequest
+func (c *createEventController) Handle(ctx *gin.Context) {
+	var event dto.CreateEventRequest
 
-		if err := c.ShouldBindJSON(&event); err != nil {
-			response.Error(c, http.StatusBadRequest, "validation.body.failed", err.Error())
-			return
-		}
-
-		if err := svc.Execute(&event); err != nil {
-			response.Error(c, http.StatusInternalServerError, "create.event.fail", err.Error())
-			return
-		}
-
-		response.Success(c, http.StatusCreated, "create.event.success", event, nil)
+	if err := ctx.ShouldBindJSON(&event); err != nil {
+		response.Error(ctx, http.StatusBadRequest, "validation.body.failed", err.Error())
+		return
 	}
+
+	if err := c.Service.Execute(&event); err != nil {
+		response.Error(ctx, http.StatusInternalServerError, "create.event.fail", err.Error())
+		return
+	}
+
+	response.Success(ctx, http.StatusCreated, "create.event.success", event, nil)
 }

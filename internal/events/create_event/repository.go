@@ -7,11 +7,6 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// CreateEventRepository defines the interface for event repository
-type CreateEventRepository interface {
-	Execute(event *models.Event) error
-}
-
 // createEventRepository is the concrete implementation of CreateEventRepository
 type createEventRepository struct {
 	db *pgxpool.Pool

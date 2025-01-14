@@ -11,10 +11,6 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type GetEventsRepository interface {
-	Execute(filters dto.EventFilters) ([]models.Event, helpers.PaginationMeta, error)
-}
-
 type getEventsRepository struct {
 	db *pgxpool.Pool
 }

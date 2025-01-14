@@ -13,27 +13,27 @@ const (
 	RefreshTokenDuration = time.Hour * 24 * 7
 )
 
-type Service struct {
+type jwtService struct {
 	SecretKey []byte
 }
 
 // NewService creates a new instance of the JWT Service
-func NewService(secretKey []byte) *Service {
-	return &Service{SecretKey: secretKey}
+func NewJWTService(secretKey []byte) JWTService {
+	return &jwtService{SecretKey: secretKey}
 }
 
 // GenerateAccessToken generates an access token for the user
-func (s *Service) GenerateAccessToken(user models.User) (string, error) {
+func (s *jwtService) GenerateAccessToken(user models.User) (string, error) {
 	return s.generateToken(user, AccessTokenDuration)
 }
 
 // GenerateRefreshToken generates a refresh token for the user
-func (s *Service) GenerateRefreshToken(user models.User) (string, error) {
+func (s *jwtService) GenerateRefreshToken(user models.User) (string, error) {
 	return s.generateToken(user, RefreshTokenDuration)
 }
 
 // generateToken is a helper function to generate JWT tokens
-func (s *Service) generateToken(user models.User, duration time.Duration) (string, error) {
+func (s *jwtService) generateToken(user models.User, duration time.Duration) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": user.ID,
 		"exp":     time.Now().Add(duration).Unix(),

@@ -6,11 +6,6 @@ import (
 	"github.com/idylicaro/event-management/internal/models"
 )
 
-// GetEventsService defines the service for getting events
-type GetEventsService interface {
-	Execute(filters dto.EventFilters) ([]models.Event, helpers.PaginationMeta, error)
-}
-
 // getEventsService is the concrete implementation of GetEventsService
 type getEventsService struct {
 	repo GetEventsRepository

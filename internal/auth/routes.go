@@ -19,13 +19,15 @@ func RegisterAuthRoutes(router *gin.RouterGroup, db *pgxpool.Pool, cfg config.Co
 		),
 	}
 
-	authUrlService := &auth_url.Service{Providers: providers}
-	authUrlController := &auth_url.Controller{Service: authUrlService}
-	router.GET("/:provider/url", authUrlController.GetAuthURL)
+	authUrlService := auth_url.NewGenerateAuthURLService(providers)
+	authUrlController := auth_url.NewGenerateAuthURLController(authUrlService)
 
-	jwtService := jwt.NewService([]byte(cfg.JWTSecret))
-	callbackRepo := callback.NewRepository(db)
-	callbackService := &callback.Service{Providers: providers, Repository: callbackRepo, JWTService: jwtService}
-	callbackController := &callback.Controller{Service: callbackService}
-	router.GET("/:provider/callback", callbackController.HandleCallback)
+	router.GET("/:provider/url", authUrlController.Handle)
+
+	jwtService := jwt.NewJWTService([]byte(cfg.JWTSecret))
+	callbackRepo := callback.NewCallbackRepository(db)
+	callbackService := callback.NewCallbackService(providers, callbackRepo, jwtService)
+	callbackController := callback.NewCallbackController(callbackService)
+
+	router.GET("/:provider/callback", callbackController.Handle)
 }

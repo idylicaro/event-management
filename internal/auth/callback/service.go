@@ -9,13 +9,17 @@ import (
 	dto "github.com/idylicaro/event-management/internal/dto/auth"
 )
 
-type Service struct {
+type callbackService struct {
 	Providers  map[string]providers.OAuthProvider
-	Repository *Repository
-	JWTService *jwt.Service
+	Repository CallbackRepository
+	JWTService jwt.JWTService
 }
 
-func (s *Service) ProcessCallback(ctx context.Context, providerName, code string) (*dto.TokenResponse, error) {
+func NewCallbackService(p map[string]providers.OAuthProvider, repo CallbackRepository, jwtS jwt.JWTService) CallbackService {
+	return &callbackService{Providers: p, Repository: repo, JWTService: jwtS}
+}
+
+func (s *callbackService) Execute(ctx context.Context, providerName, code string) (*dto.TokenResponse, error) {
 	provider, exists := s.Providers[providerName]
 	if !exists {
 		return nil, errors.New("provider not supported")

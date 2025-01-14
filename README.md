@@ -82,7 +82,7 @@ An API designed to manage events, supporting features like event creation, user 
    - [x] Configure in GCP.
    - [x] Implement OAuth2 login with Google using OpenID for authentication.
    - [x] Return the JWT token if the authentication is successful.
-   - [ ] Refactor: Change to Struct-Based Controller,Service and Repository.
+   - [x] Refactor: Change to Struct-Based Controller,Service and Repository.
    - [ ] Refresh token endpoint.
    - [ ] Private routes.
 
