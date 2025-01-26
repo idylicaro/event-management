@@ -7,6 +7,7 @@ import (
 	"github.com/idylicaro/event-management/internal/auth/callback"
 	"github.com/idylicaro/event-management/internal/auth/jwt"
 	"github.com/idylicaro/event-management/internal/auth/providers"
+	"github.com/idylicaro/event-management/internal/auth/refresh"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -30,4 +31,9 @@ func RegisterAuthRoutes(router *gin.RouterGroup, db *pgxpool.Pool, cfg config.Co
 	callbackController := callback.NewCallbackController(callbackService)
 
 	router.GET("/:provider/callback", callbackController.Handle)
+
+	refreshTokenService := refresh.NewRefreshTokenService(jwtService)
+	refreshTokenController := refresh.NewRefreshTokenController(refreshTokenService)
+
+	router.POST("/refresh-token", refreshTokenController.Handle)
 }
