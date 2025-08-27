@@ -9,6 +9,7 @@ An API designed to manage events, supporting features like event creation, user 
 ## Functional Requirements
 
 ### 1. Event Creation
+
 - **Endpoint to create an event** with the following fields:
   - Event Title
   - Description
@@ -18,17 +19,21 @@ An API designed to manage events, supporting features like event creation, user 
   - Number of tickets available
 
 ### 2. Event Management
+
 - **Update and delete events** created by the user.
 - **List events** belonging to the authenticated user.
 
 ### 3. Payments (Optional in MVP)
+
 - Process payments for paid events using **Stripe**.
 
 ### 4. Ticket Generation
+
 - Generate unique tickets for participants.
 - Store generated tickets for future validation.
 
 ### 5. Ticket Validation
+
 - Validate tickets using QR code or unique codes.
 
 ---
@@ -61,6 +66,7 @@ An API designed to manage events, supporting features like event creation, user 
 ## Roadmap
 
 ### **Phase 1: Fundamentals**
+
 1. **Initial Setup**
    - [x] Configure Gin.
    - [x] Set up basic project structure.
@@ -83,10 +89,11 @@ An API designed to manage events, supporting features like event creation, user 
    - [x] Implement OAuth2 login with Google using OpenID for authentication.
    - [x] Return the JWT token if the authentication is successful.
    - [x] Refactor: Change to Struct-Based Controller,Service and Repository.
-   - [ ] Refresh token endpoint.
+   - [x] Refresh token endpoint.
    - [ ] Private routes.
 
 ### **Phase 2: Intermediate Features**
+
 1. **Event Management**
    - [ ] Update and delete events.
    - [ ] Add pagination for event listings.
@@ -98,6 +105,7 @@ An API designed to manage events, supporting features like event creation, user 
    - [ ] Store ticket details in the database.
 
 ### **Phase 3: Validation and Deployment**
+
 1. **Ticket Validation**
    - [ ] Implement QR code simulation or unique code validation.
 2. **Testing**
@@ -116,13 +124,12 @@ An API designed to manage events, supporting features like event creation, user 
 
 ![image](https://github.com/user-attachments/assets/0d139d49-88d8-4d7d-bff6-6ffb6dac0aa7)
 
-
 ### Components
+
 - **Controllers**: Handle HTTP requests and responses.
 - **Services**: Contain business logic.
 - **Repositories**: Handle database interactions.
 - **Models**: Define data structures.
-
 
 ### Development Commands
 
@@ -133,4 +140,3 @@ An API designed to manage events, supporting features like event creation, user 
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any suggestions or improvements.
-
