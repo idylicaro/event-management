@@ -25,7 +25,7 @@ func NewGenerateAuthURLController(service GenerateAuthURLService) GenerateAuthUR
 // @Failure 400 {object} string
 // @Router /auth/{provider} [get]
 func (c *generateAuthURLController) Handle(ctx *gin.Context) {
-	provider := ctx.Param("provider") // Ex: "google" ou "github"
+	provider := ctx.Param("provider") // Ex: "google" or "github"
 	userAgent := ctx.GetHeader("User-Agent")
 	clientIP := ctx.ClientIP()
 

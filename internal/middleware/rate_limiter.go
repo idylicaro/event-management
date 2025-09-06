@@ -24,7 +24,7 @@ func NewRateLimiter(limit int, window time.Duration) *RateLimiter {
 	}
 }
 
-// RateLimit middleware para limitar requisições por IP
+// RateLimit middleware to limit requests per IP
 func (rl *RateLimiter) RateLimit() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		clientIP := c.ClientIP()
@@ -46,7 +46,7 @@ func (rl *RateLimiter) allow(key string) bool {
 	now := time.Now()
 	windowStart := now.Add(-rl.window)
 
-	// Remove requisições antigas
+	// Remove old requests
 	requests := rl.requests[key]
 	validRequests := make([]time.Time, 0, len(requests))
 
@@ -56,20 +56,20 @@ func (rl *RateLimiter) allow(key string) bool {
 		}
 	}
 
-	// Verifica se excedeu o limite
+	// Check if limit exceeded
 	if len(validRequests) >= rl.limit {
 		rl.requests[key] = validRequests
 		return false
 	}
 
-	// Adiciona nova requisição
+	// Add new request
 	validRequests = append(validRequests, now)
 	rl.requests[key] = validRequests
 
 	return true
 }
 
-// Cleanup remove entradas antigas periodicamente
+// Cleanup removes old entries periodically
 func (rl *RateLimiter) Cleanup() {
 	rl.mutex.Lock()
 	defer rl.mutex.Unlock()
@@ -94,8 +94,8 @@ func (rl *RateLimiter) Cleanup() {
 	}
 }
 
-// AuthRateLimiter rate limiter específico para endpoints de auth
+// AuthRateLimiter specific rate limiter for auth endpoints
 func NewAuthRateLimiter() *RateLimiter {
-	// 10 tentativas por IP a cada 15 minutos
+	// 10 attempts per IP every 15 minutes
 	return NewRateLimiter(10, 15*time.Minute)
 }

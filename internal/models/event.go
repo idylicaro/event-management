@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// Event representa um evento que será manipulado pela API.
+// Event represents an event that will be handled by the API.
 type Event struct {
 	ID          int64     `json:"id" db:"id"`
 	Title       string    `json:"title" db:"title"`

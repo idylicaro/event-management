@@ -32,10 +32,10 @@ func LoadConfig() *Config {
 	environment := os.Getenv("ENVIROMENT")
 
 	if environment == "" || environment == "development" {
-		// Se estiver em desenvolvimento, carrega do arquivo .env
+		// If in development, load from .env file
 		err := godotenv.Load()
 		if err != nil {
-			log.Fatal("Erro ao carregar o arquivo .env")
+			log.Fatal("Error loading .env file")
 		}
 	}
 
