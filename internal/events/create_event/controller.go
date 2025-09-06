@@ -33,7 +33,7 @@ func (c *createEventController) Handle(ctx *gin.Context) {
 		return
 	}
 
-	if err := c.Service.Execute(&event); err != nil {
+	if err := c.Service.Execute(ctx, &event); err != nil {
 		response.Error(ctx, http.StatusInternalServerError, "create.event.fail", err.Error())
 		return
 	}

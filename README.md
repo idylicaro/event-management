@@ -84,13 +84,13 @@ An API designed to manage events, supporting features like event creation, user 
    - [x] Configure Docker for development and production environments.
    - [x] Create CD rotine to first deploy.
    - [x] Make a deployment.
-5. **Authentication** (Needs first deploy and a domain to simplify OAuth2 google configuration to test...)
+5. **Authentication**
    - [x] Configure in GCP.
    - [x] Implement OAuth2 login with Google using OpenID for authentication.
    - [x] Return the JWT token if the authentication is successful.
    - [x] Refactor: Change to Struct-Based Controller,Service and Repository.
    - [x] Refresh token endpoint.
-   - [ ] Private routes.
+   - [x] Private routes.
 
 ### **Phase 2: Intermediate Features**
 

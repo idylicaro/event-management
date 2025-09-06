@@ -69,10 +69,9 @@ func main() {
 
 	api := r.Group("/api/v1")
 
-	// Events routes with optional protection
+	// Events routes with authentication required for creation
 	eventsGroup := api.Group("/events")
-	eventsGroup.Use(authMiddleware.OptionalAuth())
-	events.RegisterEventsRoutes(eventsGroup, connPool)
+	events.RegisterEventsRoutes(eventsGroup, connPool, authMiddleware)
 
 	// Protected admin routes
 	adminGroup := api.Group("/admin")

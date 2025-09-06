@@ -11,7 +11,7 @@ type CreateEventController interface {
 }
 
 type CreateEventService interface {
-	Execute(event *dto.CreateEventRequest) error
+	Execute(ctx *gin.Context, event *dto.CreateEventRequest) error
 }
 
 type CreateEventRepository interface {
