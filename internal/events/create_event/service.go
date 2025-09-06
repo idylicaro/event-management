@@ -9,17 +9,14 @@ import (
 	"github.com/idylicaro/event-management/internal/middleware"
 )
 
-// Estrutura do serviço de eventos
 type createEventService struct {
 	repo CreateEventRepository
 }
 
-// Nova instância do serviço de eventos
 func NewCreateEventService(repo CreateEventRepository) CreateEventService {
 	return &createEventService{repo}
 }
 
-// Implementação do método CreateEvent
 func (s *createEventService) Execute(ctx *gin.Context, req *dto.CreateEventRequest) error {
 	// Get authenticated user from context
 	user, exists := middleware.GetUserFromContext(ctx)

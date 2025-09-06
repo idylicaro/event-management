@@ -19,8 +19,8 @@ func NewEventRepository(db *pgxpool.Pool) CreateEventRepository {
 
 // CreateEvent inserts a new event into the database
 func (r *createEventRepository) Execute(event *models.Event) error {
-	query := `INSERT INTO events (title, description, location, start_time, end_time, price) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, created_at, updated_at`
-	err := r.db.QueryRow(context.Background(), query, event.Title, event.Description, event.Location, event.StartTime, event.EndTime, event.Price).Scan(&event.ID, &event.CreatedAt, &event.UpdatedAt)
+	query := `INSERT INTO events (title, description, location, start_time, end_time, price, user_id) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, created_at, updated_at`
+	err := r.db.QueryRow(context.Background(), query, event.Title, event.Description, event.Location, event.StartTime, event.EndTime, event.Price, event.UserID).Scan(&event.ID, &event.CreatedAt, &event.UpdatedAt)
 	if err != nil {
 		return err
 	}
