@@ -133,9 +133,32 @@ An API designed to manage events, supporting features like event creation, user 
 
 ### Development Commands
 
-- `./scripts/migrate.sh up`
-- `./scripts/migrate.sh down`
-- `./scripts/migrate.sh version`
+- `make help`
+
+#### Useful Commands
+
+```bash
+- To setup project:
+make setup
+- To run migrations:
+make docker-migrate-up
+- To check migration version:
+make docker-migrate-version
+- To rollback a migration:
+make docker-migrate-down
+- To see application logs:
+make logs
+- To see database tables:
+make db-tables
+- To connect to database shell:
+make db-shell
+- To run the application locally:
+make run
+- To run migrations locally (with POSTGRES_HOST=localhost):
+make migrate-up
+- To check migration version locally:
+make migrate-version
+```
 
 ## Contributing
 

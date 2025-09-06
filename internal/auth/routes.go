@@ -3,6 +3,7 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/idylicaro/event-management/config"
+	"github.com/idylicaro/event-management/internal/auth/audit"
 	"github.com/idylicaro/event-management/internal/auth/auth_url"
 	"github.com/idylicaro/event-management/internal/auth/callback"
 	"github.com/idylicaro/event-management/internal/auth/jwt"
@@ -27,12 +28,13 @@ func RegisterAuthRoutes(router *gin.RouterGroup, db *pgxpool.Pool, cfg config.Co
 
 	jwtService := jwt.NewJWTService([]byte(cfg.JWTSecret))
 	callbackRepo := callback.NewCallbackRepository(db)
-	callbackService := callback.NewCallbackService(providers, callbackRepo, jwtService)
+	auditService := audit.NewAuditService(db)
+	callbackService := callback.NewCallbackService(providers, callbackRepo, jwtService, auditService)
 	callbackController := callback.NewCallbackController(callbackService)
 
 	router.GET("/:provider/callback", callbackController.Handle)
 
-	refreshTokenService := refresh.NewRefreshTokenService(jwtService)
+	refreshTokenService := refresh.NewRefreshTokenService(jwtService, auditService)
 	refreshTokenController := refresh.NewRefreshTokenController(refreshTokenService)
 
 	router.POST("/refresh-token", refreshTokenController.Handle)

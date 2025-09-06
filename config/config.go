@@ -24,7 +24,7 @@ type Config struct {
 	GoogleClientSecret string
 	GoogleRedirectURL  string
 
-	// JWT
+	// JWT configuration
 	JWTSecret string
 }
 

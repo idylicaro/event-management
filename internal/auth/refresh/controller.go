@@ -1,10 +1,10 @@
 package refresh
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	dto "github.com/idylicaro/event-management/internal/dto/auth"
 	"github.com/idylicaro/event-management/internal/helpers/response"
 )
 
@@ -16,26 +16,29 @@ func NewRefreshTokenController(service RefreshTokenService) RefreshTokenControll
 	return &refreshTokenController{Service: service}
 }
 
-func (c *refreshTokenController) Handle(ctx *gin.Context) {
-	var requestBody struct {
-		RefreshToken string `json:"refresh_token"`
+func (c *refreshTokenController) Handle(context *gin.Context) {
+	// Get refresh token from request body
+	var request struct {
+		RefreshToken string `json:"refresh_token" binding:"required"`
 	}
-	if err := json.NewDecoder(ctx.Request.Body).Decode(&requestBody); err != nil {
-		response.Error(ctx, http.StatusBadRequest, "auth.refreshToken.failed", err)
+
+	if err := context.ShouldBindJSON(&request); err != nil {
+		response.Error(context, http.StatusBadRequest, "Invalid request", err.Error())
 		return
 	}
 
-	// Refresh the token
-	newAccessToken, newRefreshToken, err := c.Service.Execute(requestBody.RefreshToken)
+	userAgent := context.GetHeader("User-Agent")
+	clientIP := context.ClientIP()
+
+	accessToken, refreshToken, err := c.Service.Execute(request.RefreshToken, userAgent, clientIP)
 	if err != nil {
-		response.Error(ctx, http.StatusBadRequest, "auth.refreshToken.failed", err)
+		response.Error(context, http.StatusUnauthorized, "Token refresh failed", err.Error())
 		return
 	}
 
-	result := map[string]string{
-		"access_token":  newAccessToken,
-		"refresh_token": newRefreshToken,
+	result := dto.TokenResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
 	}
-
-	response.Success(ctx, http.StatusOK, "auth.refreshToken.success", result, nil)
+	response.Success(context, http.StatusOK, "Token refreshed successfully", result, nil)
 }

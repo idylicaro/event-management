@@ -1,5 +1,9 @@
 ### DOTENV ###
 .env
+.env.local
+.env.production
+.env.staging
+.env.security
 
 ### Go ###
 # Binaries for programs and plugins
@@ -26,4 +30,7 @@ swagger.json
 docs
 docs.go
 swagger.yaml
-.env.production
+
+### Build artifacts ###
+main
+*.log

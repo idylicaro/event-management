@@ -4,7 +4,7 @@ import "context"
 
 // OAuthProvider defines the behavior of an OAuth2 provider.
 type OAuthProvider interface {
-	GetAuthURL() string
+	GetAuthURL(state string) string
 	ExchangeCode(ctx context.Context, code string) (TokenResponse, error)
 	GetUserInfo(accessToken string) (UserInfo, error)
 }

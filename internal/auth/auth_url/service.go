@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"github.com/idylicaro/event-management/internal/auth/providers"
+	"github.com/idylicaro/event-management/internal/auth/security"
 )
 
 type generateAuthURLService struct {
@@ -14,10 +15,17 @@ func NewGenerateAuthURLService(providers map[string]providers.OAuthProvider) Gen
 	return &generateAuthURLService{Providers: providers}
 }
 
-func (s *generateAuthURLService) Execute(providerName string) (string, error) {
+func (s *generateAuthURLService) Execute(providerName, userAgent, clientIP string) (string, error) {
 	provider, exists := s.Providers[providerName]
 	if !exists {
 		return "", errors.New("provider not supported")
 	}
-	return provider.GetAuthURL(), nil
+
+	// Generate secure state for CSRF protection
+	state, err := security.GenerateState(providerName, userAgent, clientIP)
+	if err != nil {
+		return "", err
+	}
+
+	return provider.GetAuthURL(state), nil
 }

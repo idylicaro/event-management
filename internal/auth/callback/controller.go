@@ -28,7 +28,11 @@ func NewCallbackController(service CallbackService) CallbackController {
 func (c *callbackController) Handle(ctx *gin.Context) {
 	provider := ctx.Param("provider")
 	code := ctx.Query("code")
-	tokenResponse, err := c.Service.Execute(ctx, provider, code)
+	state := ctx.Query("state")
+	userAgent := ctx.GetHeader("User-Agent")
+	clientIP := ctx.ClientIP()
+
+	tokenResponse, err := c.Service.Execute(ctx, provider, code, state, userAgent, clientIP)
 	if err != nil {
 		response.Error(ctx, http.StatusBadRequest, "auth.callback.failed", err.Error())
 		return

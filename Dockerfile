@@ -8,8 +8,9 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Install Swag CLI
+# Install Swag CLI and golang-migrate
 RUN go install github.com/swaggo/swag/cmd/swag@latest
+RUN go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
 # Copy the rest of the application code into the container
 COPY . ./
@@ -38,8 +39,12 @@ WORKDIR /app
 
 # Copy the compiled Go binary from the builder stage
 COPY --from=builder /app/main .
+# Copy the golang-migrate binary from the builder stage
+COPY --from=builder /go/bin/migrate /usr/local/bin/migrate
 # Copy the Swagger documentation from the builder stage
 COPY --from=builder /app/docs /app/docs
+# Copy migrations folder
+COPY --from=builder /app/migrations /app/migrations
 
 # Set the environment variable for production
 ENV ENVIRONMENT=production
@@ -60,7 +65,7 @@ FROM debian:bullseye-slim AS development
 RUN apt-get update && \
     apt-get install -y ca-certificates && \
     update-ca-certificates
-    
+
 # Install necessary libraries (e.g., libc6) to run the Go binary
 RUN apt-get update && \
     apt-get install -y libc6
@@ -73,8 +78,12 @@ COPY .env .env
 
 # Copy the compiled Go binary from the builder stage
 COPY --from=builder /app/main .
+# Copy the golang-migrate binary from the builder stage
+COPY --from=builder /go/bin/migrate /usr/local/bin/migrate
 # Copy the Swagger documentation from the builder stage
 COPY --from=builder /app/docs /app/docs
+# Copy migrations folder
+COPY --from=builder /app/migrations /app/migrations
 
 # Set the environment variable for development
 ENV ENVIRONMENT=development

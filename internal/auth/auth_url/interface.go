@@ -9,5 +9,5 @@ type GenerateAuthURLController interface {
 }
 
 type GenerateAuthURLService interface {
-	Execute(providerName string) (string, error)
+	Execute(providerName, userAgent, clientIP string) (string, error)
 }

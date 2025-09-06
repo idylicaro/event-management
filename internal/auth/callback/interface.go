@@ -14,7 +14,7 @@ type CallbackController interface {
 }
 
 type CallbackService interface {
-	Execute(ctx context.Context, providerName, code string) (*dto.TokenResponse, error)
+	Execute(ctx context.Context, providerName, code, state, userAgent, clientIP string) (*dto.TokenResponse, error)
 }
 
 type CallbackRepository interface {

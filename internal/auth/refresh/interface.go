@@ -7,5 +7,5 @@ type RefreshTokenController interface {
 }
 
 type RefreshTokenService interface {
-	Execute(refreshToken string) (string, string, error)
+	Execute(refreshToken, userAgent, clientIP string) (string, string, error)
 }

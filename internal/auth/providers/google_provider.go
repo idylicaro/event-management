@@ -1,4 +1,3 @@
-// internal/auth/providers/google_provider.go
 package providers
 
 import (
@@ -8,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/oauth2"
@@ -30,10 +30,9 @@ func NewGoogleProvider(clientID, clientSecret, redirectURL string) *GoogleProvid
 	}
 }
 
-func (g *GoogleProvider) GetAuthURL() string {
-	// TODO: Optionally, the front-end can handle generating the code_verifier and code_challenge for PKCE security.
-	// The front-end should generate a secure random code_verifier and calculate the code_challenge with SHA256.
-	return g.config.AuthCodeURL("state", oauth2.AccessTypeOffline)
+func (g *GoogleProvider) GetAuthURL(state string) string {
+	// Use provided state for CSRF protection
+	return g.config.AuthCodeURL(state, oauth2.AccessTypeOffline)
 }
 
 func (g *GoogleProvider) ExchangeCode(ctx context.Context, code string) (TokenResponse, error) {
@@ -41,15 +40,17 @@ func (g *GoogleProvider) ExchangeCode(ctx context.Context, code string) (TokenRe
 	if err != nil {
 		return TokenResponse{}, err
 	}
+
 	idToken, ok := token.Extra("id_token").(string)
 	if !ok {
 		return TokenResponse{}, fmt.Errorf("ID Token not found in response")
 	}
+
 	return TokenResponse{
 		AccessToken:  token.AccessToken,
 		RefreshToken: token.RefreshToken,
 		IDToken:      idToken,
-		ExpiresIn:    int(token.Expiry.Sub(token.Expiry).Seconds()),
+		ExpiresIn:    int(token.Expiry.Sub(time.Now()).Seconds()),
 	}, nil
 }
 

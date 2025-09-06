@@ -26,7 +26,10 @@ func NewGenerateAuthURLController(service GenerateAuthURLService) GenerateAuthUR
 // @Router /auth/{provider} [get]
 func (c *generateAuthURLController) Handle(ctx *gin.Context) {
 	provider := ctx.Param("provider") // Ex: "google" ou "github"
-	url, err := c.Service.Execute(provider)
+	userAgent := ctx.GetHeader("User-Agent")
+	clientIP := ctx.ClientIP()
+
+	url, err := c.Service.Execute(provider, userAgent, clientIP)
 	if err != nil {
 		response.Error(ctx, http.StatusBadRequest, "auth.get_auth_url.failed", err.Error())
 		return
