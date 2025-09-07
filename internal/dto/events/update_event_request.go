@@ -3,10 +3,10 @@ package dto
 import "time"
 
 type UpdateEventRequest struct {
-	Title       string    `json:"title"`
-	Description string    `json:"description"`
-	Location    string    `json:"location"`
-	StartTime   time.Time `json:"start_time"`
-	EndTime     time.Time `json:"end_time"`
-	Price       float64   `json:"price" binding:"gte=0"`
+	Title       *string    `json:"title,omitempty"`
+	Description *string    `json:"description,omitempty"`
+	Location    *string    `json:"location,omitempty"`
+	StartTime   *time.Time `json:"start_time,omitempty"`
+	EndTime     *time.Time `json:"end_time,omitempty"`
+	Price       *float64   `json:"price,omitempty" binding:"omitempty,gte=0"`
 }

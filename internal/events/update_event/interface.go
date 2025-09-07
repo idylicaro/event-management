@@ -15,6 +15,6 @@ type UpdateEventService interface {
 }
 
 type UpdateEventRepository interface {
-	Execute(event *models.Event) error
+	Execute(eventID, userID int64, req *dto.UpdateEventRequest) (*models.Event, error)
 	GetByIDAndUserID(eventID, userID int64) (*models.Event, error)
 }
