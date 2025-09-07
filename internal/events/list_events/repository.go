@@ -2,9 +2,10 @@ package list_events
 
 import (
 	"context"
-	"fmt"
 	"log"
+	"strings"
 
+	"github.com/idylicaro/event-management/internal/database"
 	dto "github.com/idylicaro/event-management/internal/dto/events"
 	"github.com/idylicaro/event-management/internal/helpers"
 	"github.com/idylicaro/event-management/internal/models"
@@ -20,86 +21,94 @@ func NewGetEventsRepository(db *pgxpool.Pool) GetEventsRepository {
 }
 
 func (r *getEventsRepository) Execute(filters dto.EventFilters) ([]models.Event, helpers.PaginationMeta, error) {
-	baseQuery := `
-		SELECT id, title, description, location, start_time, end_time, price, created_at, updated_at
-		FROM events
-		WHERE 1=1
-	`
-	countQuery := `
-		SELECT COUNT(*) FROM events WHERE 1=1
-	`
+	// Build main query using QueryBuilder
+	qb := database.NewQueryBuilder("SELECT id, title, description, location, start_time, end_time, price, created_at, updated_at, user_id FROM events")
 
-	args := []interface{}{}
-	argIndex := 1
-
+	// Add filters
 	if filters.Title != "" {
-		filter := ` AND title ILIKE $` + fmt.Sprint(argIndex)
-		baseQuery += filter
-		countQuery += filter
-		args = append(args, "%"+filters.Title+"%")
-		argIndex++
+		qb.AddLikeCondition("title", filters.Title)
 	}
 	if filters.StartTime != "" {
-		filter := ` AND start_time >= $` + fmt.Sprint(argIndex)
-		baseQuery += filter
-		countQuery += filter
-		args = append(args, filters.StartTime)
-		argIndex++
+		qb.AddCondition("start_time >= ?", filters.StartTime)
 	}
 	if filters.EndTime != "" {
-		filter := ` AND end_time <= $` + fmt.Sprint(argIndex)
-		baseQuery += filter
-		countQuery += filter
-		args = append(args, filters.EndTime)
-		argIndex++
+		qb.AddCondition("end_time <= ?", filters.EndTime)
 	}
 
+	// Add sorting
 	sortMap := map[string]string{
 		"date:asc":   "start_time ASC",
 		"date:desc":  "start_time DESC",
 		"title:asc":  "title ASC",
 		"title:desc": "title DESC",
 	}
-	if order, ok := sortMap[filters.Sort]; ok {
-		baseQuery += ` ORDER BY ` + order
+	if filters.Sort != "" {
+		if order, ok := sortMap[filters.Sort]; ok {
+			parts := strings.Split(order, " ")
+			if len(parts) == 2 {
+				qb.AddOrderBy(parts[0], parts[1])
+			}
+		}
 	} else {
-		baseQuery += ` ORDER BY start_time ASC` // Default
+		qb.AddOrderBy("start_time", "ASC") // Default
 	}
 
-	// Pagination
-	paginationQuery, paginationArgs := helpers.BuildPaginationQuery(helpers.PaginationParams{
-		Limit: filters.Limit,
-		Page:  filters.Page,
-	})
-	baseQuery += paginationQuery
-	args = append(args, paginationArgs...)
+	// Add pagination
+	if filters.Limit > 0 {
+		qb.SetLimit(filters.Limit)
+	}
+	if filters.Page > 1 && filters.Limit > 0 {
+		offset := (filters.Page - 1) * filters.Limit
+		qb.SetOffset(offset)
+	}
 
-	log.Printf("Query: %s\n", baseQuery)
+	// Build queries
+	mainQuery, mainArgs := qb.Build()
+
+	// Build count query (same conditions, no ORDER BY/LIMIT/OFFSET)
+	countQb := database.NewQueryBuilder("SELECT COUNT(*) FROM events")
+	if filters.Title != "" {
+		countQb.AddLikeCondition("title", filters.Title)
+	}
+	if filters.StartTime != "" {
+		countQb.AddCondition("start_time >= ?", filters.StartTime)
+	}
+	if filters.EndTime != "" {
+		countQb.AddCondition("end_time <= ?", filters.EndTime)
+	}
+	countQuery, countArgs := countQb.Build()
+
+	log.Printf("Main Query: %s\n", mainQuery)
 	log.Printf("Count Query: %s\n", countQuery)
-	log.Printf("Args: %v\n", args)
+	log.Printf("Main Args: %v\n", mainArgs)
+	log.Printf("Count Args: %v\n", countArgs)
 
+	// Execute count query
 	var totalItems int
-	err := r.db.QueryRow(context.Background(), countQuery, args[:argIndex-1]...).Scan(&totalItems)
+	err := r.db.QueryRow(context.Background(), countQuery, countArgs...).Scan(&totalItems)
 	if err != nil {
 		return nil, helpers.PaginationMeta{}, err
 	}
 
-	rows, err := r.db.Query(context.Background(), baseQuery, args...)
+	// Execute main query
+	rows, err := r.db.Query(context.Background(), mainQuery, mainArgs...)
 	if err != nil {
 		return nil, helpers.PaginationMeta{}, err
 	}
 	defer rows.Close()
 
-	// Mapping
+	// Scan results
 	var events []models.Event
 	for rows.Next() {
 		var event models.Event
-		err := rows.Scan(&event.ID, &event.Title, &event.Description, &event.Location, &event.StartTime, &event.EndTime, &event.Price, &event.CreatedAt, &event.UpdatedAt)
+		err := rows.Scan(&event.ID, &event.Title, &event.Description, &event.Location, &event.StartTime, &event.EndTime, &event.Price, &event.CreatedAt, &event.UpdatedAt, &event.UserID)
 		if err != nil {
 			return nil, helpers.PaginationMeta{}, err
 		}
 		events = append(events, event)
 	}
+
+	// Calculate pagination metadata
 	meta := helpers.CalculatePaginationMeta(totalItems, filters.Limit, filters.Page)
 
 	return events, meta, nil
