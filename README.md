@@ -97,7 +97,6 @@ An API designed to manage events, supporting features like event creation, user 
 1. **Event Management**
    - [ ] Update and delete events.
    - [ ] Add pagination for event listings.
-   - [ ] Protect endpoints with Private endpoints.
 2. **Payments**
    - [ ] Integrate Stripe for processing payments (Checkout Sessions).
 3. **Ticket Handling**
