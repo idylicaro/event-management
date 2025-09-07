@@ -5,6 +5,7 @@ import (
 
 	"github.com/idylicaro/event-management/internal/events/create_event"
 	"github.com/idylicaro/event-management/internal/events/list_events"
+	"github.com/idylicaro/event-management/internal/events/update_event"
 	"github.com/idylicaro/event-management/internal/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -24,4 +25,11 @@ func RegisterEventsRoutes(router *gin.RouterGroup, db *pgxpool.Pool, authMiddlew
 
 	// GET can be optional auth (for public event listing)
 	router.GET("/", authMiddleware.OptionalAuth(), listEventsController.Handle)
+
+	updateEventRepo := update_event.NewUpdateEventRepository(db)
+	updateEventService := update_event.NewUpdateEventService(updateEventRepo)
+	updateEventController := update_event.NewUpdateEventController(updateEventService)
+
+	// PUT requires authentication
+	router.PUT("/:id", authMiddleware.RequireAuth(), updateEventController.Handle)
 }
