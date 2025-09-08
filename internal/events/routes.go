@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/idylicaro/event-management/internal/events/create_event"
+	"github.com/idylicaro/event-management/internal/events/delete_event"
 	"github.com/idylicaro/event-management/internal/events/list_events"
 	"github.com/idylicaro/event-management/internal/events/update_event"
 	"github.com/idylicaro/event-management/internal/middleware"
@@ -32,4 +33,11 @@ func RegisterEventsRoutes(router *gin.RouterGroup, db *pgxpool.Pool, authMiddlew
 
 	// PUT requires authentication
 	router.PUT("/:id", authMiddleware.RequireAuth(), updateEventController.Handle)
+
+	deleteEventRepo := delete_event.NewDeleteEventRepository(db)
+	deleteEventService := delete_event.NewDeleteEventService(deleteEventRepo)
+	deleteEventController := delete_event.NewDeleteEventController(deleteEventService)
+
+	// DELETE requires authentication
+	router.DELETE("/:id", authMiddleware.RequireAuth(), deleteEventController.Handle)
 }
